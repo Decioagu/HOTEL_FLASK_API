@@ -1,12 +1,13 @@
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy # ORM (Object-Relational Mapping)
 
 '''
-Flask_SQLAlchemy: É uma extensão do Flask que facilita a integração do SQLAlchemy 
-com o Flask. SQLAlchemy é uma biblioteca Python para gerenciar bancos de dados 
-relacionais usando uma abordagem ORM (Object Relational Mapping), atuando como 
-um conector entre seu aplicativo Flask e o banco de dados.
+SQLAlchemy é uma biblioteca em Python que facilita a interação com 
+bancos de dados relacionais de uma maneira mais orientada a objetos. 
+Em vez de escrever SQL diretamente, SQLAlchemy permite que você defina 
+objetos Python que representam tabelas em seu banco de dados.
 
 pip install Flask-SQLAlchemy
 '''
-# ORM (Object-Relational Mapping)
-banco = SQLAlchemy()
+banco = SQLAlchemy() # ORM criando uma engine para um banco
+
+

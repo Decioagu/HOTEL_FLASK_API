@@ -14,55 +14,24 @@ atributos.add_argument('senha', type=str, required=True, help='Campo senha obrig
 atributos.add_argument('email', type=str) # argumentos
 atributos.add_argument('ativado', type=bool) # argumentos
 
-# rota (APENAS PARA FINS DIÁDICO MÉTODO <= EXCLUIR)
-class Usuarios(Resource):
-    # método de (Leitura)
-    def get(self):
-        # {'usuario': [(MÉTODO AUXILIAR JSON) for usuario in (ESCOPO BANCO DE DADOS).(filtra_todos)]}
-        return {'usuario': [usuario.json_senha() for usuario in UsuarioModel.query.all()]}
+# rotas (CRUD)
 
-# rota (CRUD)
-class Usuario(Resource):    
-
-    # Solicitar (leitura) por "id"
-    def get(self, usuario_id):
-        # usuario = (ESCOPO BANCO DE DADOS).(método filtro (pesquisa por ID)).(retornar 1º resultado)
-        usuario = UsuarioModel.query.filter_by(usuario_id=usuario_id).first()
-
-        if usuario:
-            # (ESCOPO BANCO DE DADOS).(MÉTODO AUXILIAR JSON)
-            return usuario.json()   
-        else:
-            return {'mensagem': 'Usuário não existe.'}, 404           
-
-    # Excluir
-    @jwt_required() # necessário token de acesso
-    def delete(self, usuario_id):
-
-        # usuario = (ESCOPO BANCO DE DADOS).(método filtro (pesquisa por ID)).(retornar 1º resultado) 
-        usuario = UsuarioModel.query.filter_by(usuario_id=usuario_id).first() # retorna alguma coisa ou falso
-
-        # Se ID existir
-        if usuario:
-            # (ESCOPO BANCO DE DADOS).(método delete)
-            banco.session.delete(usuario)
-            banco.session.commit()
-            return {'mensagem': 'Usuário deletado.'}, 200   
-        else:
-            return {'mensagem': 'Usuário não existe.'}, 404
-        
-# rota cadastrar usuário
+# rota cadastrar usuário (criar)
 class CadastroUsuario(Resource):
 
     def post(self):
         
-        # dados = (PARÂMETRO DO USUÁRIO => argumentos).(extrair dados)
+         # dados = (PARÂMETRO DO USUÁRIO => argumentos).(extrair dados)
         dados = atributos.parse_args()
 
         # SE emil nao for preenchido, finalize cadastrado 
         # (PARÂMETRO DO USUÁRIO).email
         if not dados.get('email') or dados.get('email') is None:
             return {'mensagem': 'email não pode ser deixado em branco.'}, 400
+        
+        # (PARÂMETRO DO USUÁRIO).email
+        if not '@' in dados.get('email'):
+            return {'mensagem': "É obrigatório @ no endereço de e-mail."}, 400
         
         # SE não existir email, finalize cadastrado 
         # (ESCOPO BANCO DE DADOS).(método filtro (pesquisa por email)).(retornar 1º resultado)
@@ -95,11 +64,50 @@ class CadastroUsuario(Resource):
             
             # mensagem de sucesso 
             return {f"mensagem": "Usuário criado com sucesso!!!"}, 201
+        
+# rota (APENAS PARA FINS DIÁDICO MÉTODO <= EXCLUIR)
+class Usuarios_senha(Resource):
+    # método de (Leitura)
+    def get(self):
+        # {'usuario': [(MÉTODO AUXILIAR JSON) for usuario in (ESCOPO BANCO DE DADOS).(filtra_todos)]}
+        return {'usuario': [usuario.json_senha() for usuario in UsuarioModel.query.all()]}
 
-# rota login
+        
+# rota usuário (buscar, excluir)
+class Usuario(Resource):    
+
+    # Solicitar (leitura) por "id"
+    def get(self, usuario_id):
+        # usuario = (ESCOPO BANCO DE DADOS).(método filtro (pesquisa por ID)).(retornar 1º resultado)
+        usuario = UsuarioModel.query.filter_by(usuario_id=usuario_id).first()
+
+        if usuario:
+            # (ESCOPO BANCO DE DADOS).(MÉTODO AUXILIAR JSON)
+            return usuario.json()   
+        else:
+            return {'mensagem': 'Usuário não existe.'}, 404        
+
+    # Excluir
+    @jwt_required() # necessário token de acesso
+    def delete(self, usuario_id):
+
+        # usuario = (ESCOPO BANCO DE DADOS).(método filtro (pesquisa por ID)).(retornar 1º resultado) 
+        usuario = UsuarioModel.query.filter_by(usuario_id=usuario_id).first() # retorna alguma coisa ou falso
+
+        # Se ID existir
+        if usuario:
+            # (ESCOPO BANCO DE DADOS).(método delete)
+            banco.session.delete(usuario)
+            banco.session.commit()
+            return {'mensagem': 'Usuário deletado.'}, 200   
+        else:
+            return {'mensagem': 'Usuário não existe.'}, 404     
+        
+# rota login usuario (criar senha "Token")
 class UsuarioLogin(Resource):
 
-    def post(self):
+    @classmethod
+    def post(cls):
         # dados = (PARÂMETRO DO USUÁRIO => argumentos).(extrair dados)
         dados = atributos.parse_args()
         
@@ -113,7 +121,8 @@ class UsuarioLogin(Resource):
             # (ESCOPO BANCO DE DADOS).ativado
             if usuario.ativado:
                 # create_access_token() => usado em sistema de autenticação e autorização
-                token_de_acesso = create_access_token(identity=usuario.usuario_id)
+                token_de_acesso = create_access_token(identity=str(usuario.usuario_id))
+                '''OBS: "identity" dentro do token JWT deve ser uma string'''
                 return {'acesso token': token_de_acesso}, 200
             else:
                 return {'mensagem': 'Usuário não ativo.'}, 400
@@ -122,14 +131,14 @@ class UsuarioLogin(Resource):
         return {'mensagem': 'Usuário ou senha errado.'}, 401 
 
 # rota logout
-class UsuarioLogout(Resource):
+class UsuarioLogout(Resource): ###
     # sai do "login" e bloqueia senha de "token" do usuário na lista "BLACKLIST"
     @jwt_required()
     def post(self):
         jwt_id = get_jwt()['jti']
         BLACKLIST.add(jwt_id) # lista de token invalido apos "saída de login" 
         return {'mensagem' : 'Saiu do login com sucesso!!!'}, 200
-    
+
 # rota ativação de cadastro
 class UsuarioAtivacao(Resource):
     
@@ -164,7 +173,7 @@ class UsuarioAtivacao(Resource):
 
         '''
         - make_response(...): Esta função cria uma resposta HTTP personalizada.
-        - render_template: Esta função renderiza um template HTML
+        - render_template: Esta função renderiza um template HTML, quando você deseja retornar uma resposta para uma rota
         - parâmetro enviados no corpo do HTML:
             - email=usuario.email
             - usuario=usuario.login

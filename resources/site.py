@@ -28,13 +28,17 @@ class Site(Resource):
     def post(self, url):
         # site = (ESCOPO BANCO DE DADOS).(método filtro (pesquisa por "url")).(retornar 1º resultado)
         site = SiteModel.query.filter_by(url=url).first()
+
         if site:
             return {'mensagem': 'Site já existe'}, 400
+        
+        if not 'www.' in url:
+            return {'mensagem': "Favor inserir endereço valido iniciando com (www.)"}, 400
         else:
             # acesso ao banco de dados com "url"
             novo_site = SiteModel(url) # >>>>> preencher dados no Banco de Dabos => (MÉTODO AUXILIAR CONSTRUTOR) <<<<<
             try:
-                # (ESCOPO Flask).(método salvar dados)
+                # (ESCOPO BANCO DE DADOS).(método salvar dados)
                 banco.session.add(novo_site)
                 banco.session.commit()
                 # (ESCOPO BANCO DE DADOS).(MÉTODO AUXILIAR JSON)
