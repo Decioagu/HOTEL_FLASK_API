@@ -1,6 +1,6 @@
 # HOTEL_PAI_FLASK 
  
- **API de cadastramento de hotel site e usuário on-line com autenticação via e-mail**
+ **API de cadastramento de hotel, site e usuário on-line com autenticação via e-mail**
 
  Este projeto consiste em uma API back-end feita com Flask para consulta e cadastramento de hotéis e usuário em endereços de WEB, em sites previamente cadastrados armazenados em __Banco de Dados MySQL__.
 
