@@ -2,21 +2,22 @@
  
  **API de cadastramento de hotel, site e usuário on-line com autenticação via e-mail**
 
- Este projeto consiste em uma API back-end feita com Flask para consulta e cadastramento de hotéis e usuário em endereços de WEB, em sites previamente cadastrados armazenados em __Banco de Dados MySQL__.
+- Este projeto consiste em uma API back-end feita com Flask para consulta e cadastramento de hotéis e usuário em endereços de WEB.
 
- Segue arquivo em word com documentação de uso da API HOTEL: __Documentação REST API Hoteis.docx__
+- Segue anexo arquivo em PDF com documentação de uso da API HOTEL: __Documentação REST API Hoteis.pdf__
 
 - Principais ações:
-    - Cadastramento de sites;
-    - Cadastramento de hotéis;
-    - Cadastramento de usuário;
-    - Consulta via id de usuário;
-    - Autenticação de usuário via e-mail;
-    - Consulta personalizadas de hotéis apos autenticação;
-    - Relacionamento sites e hotéis cadastrado por usuário autenticado.
+    - Cadastramento de usuários, hotéis e sites;
+    - Consulta de lista hotéis e sites;
+    - Consulta via id de usuários, hotéis e sites;
+    - Consulta personalizadas de hotéis;
+    - Login de usuário (token) de autenticação;
+    - Logout de usuário (token) de autenticação;
+    - Atualização de dados usuários, hotéis e sites, apos autenticação;
+    - Excluir dados de usuários, hotéis e sites, apos autenticação;
 
 - Principais tecnologias:
-    - __Flask__ é um microframework para desenvolvimento web escrito em Python.
+    - __Flask__ é um microframework para desenvolvimento API escrito em Python.
 
     - __SQLAlchemy__ é uma biblioteca de ORM (Object-Relational Mapping) em Python que permite manipulação e troca simplificada diferentes bancos de dados relacionais com mudança em uma única linha de comando.
 
