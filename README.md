@@ -1,4 +1,4 @@
-# HOTEL_PAI_FLASK 
+# HOTEL_API_FLASK 
  
  **API de cadastramento de hotel, site e usuário on-line com autenticação via e-mail**
 
