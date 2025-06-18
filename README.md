@@ -4,7 +4,8 @@
 
 - Este projeto consiste em uma API back-end feita com Flask para consulta e cadastramento de hotéis e usuário em endereços de WEB.
 
-- Segue anexo arquivo em PDF com documentação de uso da API HOTEL: __Documentação REST API Hoteis.pdf__
+- Segue anexo arquivo em PDF com documentação de uso da API HOTEL: 
+[Documentação REST API Hoteis.pdf](<Documentação REST API HOTEL.pdf>)
 
 - Principais ações:
     - Cadastramento de usuários, hotéis e sites;
